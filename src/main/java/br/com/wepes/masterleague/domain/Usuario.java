@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table
+@Table(name = "usuario")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Usuario implements Serializable {
@@ -24,5 +24,4 @@ public class Usuario implements Serializable {
 	private Long id;
 
 	private String nome;
-
 }
