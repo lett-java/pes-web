@@ -1,5 +1,7 @@
 package br.com.wepes.masterleague.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +36,16 @@ public class UsuarioController {
 
 	@GetMapping("/{idUsuario}")
 	public UsuarioDTO buscar(@PathVariable Long idUsuario) {
-		Usuario usuario = usuarioService.buscar(idUsuario);
+		Usuario usuario = usuarioService.buscarPorId(idUsuario);
+
 		return usuarioConverter.paraUsuarioDTO(usuario);
+	}
+
+	@GetMapping
+	public List<UsuarioDTO> buscar() {
+		List<Usuario> listaUsuarios = usuarioService.buscar();
+
+		return usuarioConverter.paraListaUsuarioDTOs(listaUsuarios);
 	}
 
 	@PostMapping
@@ -43,6 +53,7 @@ public class UsuarioController {
 	public UsuarioDTO adicionar(@RequestBody UsuarioCadastroDTO usuarioCadastroDTO)
 			throws UsuarioNaoEncontradoException {
 		Usuario usuario = usuarioService.salvar(usuarioCadastroDTO);
+
 		return usuarioConverter.paraUsuarioDTO(usuario);
 	}
 

@@ -1,5 +1,8 @@
 package br.com.wepes.masterleague.api.converter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +28,13 @@ public class UsuarioConverter {
 
 	public Usuario paraUsuario(UsuarioAtualizarDTO usuarioAtualizarDTO) {
 		return modelMapper.map(usuarioAtualizarDTO, Usuario.class);
+	}
+
+	public List<UsuarioDTO> paraListaUsuarioDTOs(List<Usuario> listaUsuarios) {
+		List<UsuarioDTO> listaUsuarioDTOs = new ArrayList<>();
+		listaUsuarios.forEach(usuario -> listaUsuarioDTOs.add(paraUsuarioDTO(usuario)));
+
+		return listaUsuarioDTOs;
 	}
 
 }

@@ -1,5 +1,6 @@
 package br.com.wepes.masterleague.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -38,7 +39,7 @@ public class UsuarioService implements UsuarioServiceImpl {
 		return usuarioRepository.save(usuarioConverter.paraUsuario(usuarioCadastroDTO));
 	}
 
-	public Usuario buscar(Long idUsuario) {
+	public Usuario buscarPorId(Long idUsuario) {
 		return usuarioRepository.findById(idUsuario).orElseThrow(
 				() -> new EntidadeNaoEncontradaException(String.format(ID_USUARIO_NAO_ENCONTRADA, idUsuario)));
 	}
@@ -55,17 +56,18 @@ public class UsuarioService implements UsuarioServiceImpl {
 	}
 
 	public Usuario atualizar(@Valid UsuarioAtualizarDTO usuarioAtualizarDTO, Long idUsuario) {
-		Usuario usuarioAtualizar = buscar(idUsuario);
+		Usuario usuarioAtualizar = buscarPorId(idUsuario);
 
 		validarAtualizacao(usuarioAtualizarDTO, usuarioAtualizar);
 		usuarioAtualizar = usuarioConverter.paraUsuario(usuarioAtualizarDTO);
+		usuarioAtualizar.setId(idUsuario);
 
 		return usuarioRepository.save(usuarioAtualizar);
 	}
 
 	private void validarAtualizacao(UsuarioAtualizarDTO usuarioAtualizarDTO, Usuario usuarioAtualizar) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByNomeIgnoreCase(usuarioAtualizarDTO.getNome());
-		if (usuarioOptional.get().getId() != usuarioAtualizar.getId()) {
+		if (usuarioOptional.isPresent() && !usuarioOptional.get().getId().equals(usuarioAtualizar.getId())) {
 			throw new NegocioException(String.format(NOME_USUARIO_JA_CADASTRADO, usuarioAtualizarDTO.getNome()));
 		}
 	}
@@ -75,5 +77,9 @@ public class UsuarioService implements UsuarioServiceImpl {
 		if (usuarioOptional.isPresent()) {
 			throw new NegocioException(String.format(NOME_USUARIO_JA_CADASTRADO, usuarioCadastroDTO.getNome()));
 		}
+	}
+
+	public List<Usuario> buscar() {
+		return usuarioRepository.findAll();
 	}
 }
