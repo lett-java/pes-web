@@ -9,5 +9,4 @@ public class PesWebApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PesWebApplication.class, args);
 	}
-
 }

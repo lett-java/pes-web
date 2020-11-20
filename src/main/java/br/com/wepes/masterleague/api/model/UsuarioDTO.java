@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UsuarioDTO {
 
+	@EqualsAndHashCode.Include
 	private Long id;
 	private String nome;
 

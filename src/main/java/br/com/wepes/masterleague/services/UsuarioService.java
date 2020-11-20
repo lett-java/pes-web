@@ -11,8 +11,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import br.com.wepes.masterleague.api.converter.UsuarioConverter;
-import br.com.wepes.masterleague.api.model.UsuarioAtualizarDTO;
-import br.com.wepes.masterleague.api.model.UsuarioCadastroDTO;
+import br.com.wepes.masterleague.api.model.atualizar.UsuarioAtualizarDTO;
+import br.com.wepes.masterleague.api.model.cadastro.UsuarioCadastroDTO;
 import br.com.wepes.masterleague.domain.Usuario;
 import br.com.wepes.masterleague.domain.exceptions.EntidadeEmUsoException;
 import br.com.wepes.masterleague.domain.exceptions.EntidadeNaoEncontradaException;
@@ -74,7 +74,7 @@ public class UsuarioService implements UsuarioServiceImpl {
 
 	private void validarCadastro(UsuarioCadastroDTO usuarioCadastroDTO) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByNomeIgnoreCase(usuarioCadastroDTO.getNome());
-		if (usuarioOptional.isPresent()) {
+		if (usuarioOptional.isPresent() || usuarioCadastroDTO.getNome().isEmpty()) {
 			throw new NegocioException(String.format(NOME_USUARIO_JA_CADASTRADO, usuarioCadastroDTO.getNome()));
 		}
 	}

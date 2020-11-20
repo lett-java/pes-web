@@ -1,4 +1,4 @@
-package br.com.wepes.masterleague.api.model;
+package br.com.wepes.masterleague.api.model.cadastro;
 
 import javax.validation.constraints.NotBlank;
 

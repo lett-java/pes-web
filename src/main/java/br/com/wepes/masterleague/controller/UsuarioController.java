@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.wepes.masterleague.api.converter.UsuarioConverter;
-import br.com.wepes.masterleague.api.model.UsuarioAtualizarDTO;
-import br.com.wepes.masterleague.api.model.UsuarioCadastroDTO;
 import br.com.wepes.masterleague.api.model.UsuarioDTO;
+import br.com.wepes.masterleague.api.model.atualizar.UsuarioAtualizarDTO;
+import br.com.wepes.masterleague.api.model.cadastro.UsuarioCadastroDTO;
 import br.com.wepes.masterleague.domain.Usuario;
 import br.com.wepes.masterleague.domain.exceptions.UsuarioNaoEncontradoException;
 import br.com.wepes.masterleague.services.UsuarioService;

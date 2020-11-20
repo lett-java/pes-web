@@ -7,9 +7,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import br.com.wepes.masterleague.api.model.UsuarioAtualizarDTO;
-import br.com.wepes.masterleague.api.model.UsuarioCadastroDTO;
 import br.com.wepes.masterleague.api.model.UsuarioDTO;
+import br.com.wepes.masterleague.api.model.atualizar.UsuarioAtualizarDTO;
+import br.com.wepes.masterleague.api.model.cadastro.UsuarioCadastroDTO;
 import br.com.wepes.masterleague.domain.Usuario;
 
 @Component

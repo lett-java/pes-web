@@ -4,7 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import br.com.wepes.masterleague.api.model.UsuarioCadastroDTO;
+import br.com.wepes.masterleague.api.model.cadastro.UsuarioCadastroDTO;
 import br.com.wepes.masterleague.domain.Usuario;
 
 @Configuration

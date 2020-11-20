@@ -1,4 +1,4 @@
-package br.com.wepes.masterleague.api.model;
+package br.com.wepes.masterleague.api.model.atualizar;
 
 import javax.validation.constraints.NotBlank;
 
