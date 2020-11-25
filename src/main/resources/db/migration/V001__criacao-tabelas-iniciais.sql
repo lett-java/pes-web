@@ -37,13 +37,6 @@ CREATE TABLE negociacao (
 	primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE titulo (
-	id bigint NOT NULL AUTO_INCREMENT, 
-	tipo_competicao integer, 
-	
-	primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 CREATE TABLE usuario (
 	id bigint NOT NULL AUTO_INCREMENT, 
 	nome varchar(255), 
