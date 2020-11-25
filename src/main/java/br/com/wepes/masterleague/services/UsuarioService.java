@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.wepes.masterleague.api.converter.UsuarioConverter;
@@ -32,11 +33,21 @@ public class UsuarioService implements UsuarioServiceImpl {
 
 	@Autowired
 	private UsuarioConverter usuarioConverter;
-
+	
 	@Override
 	public Usuario salvar(UsuarioCadastroDTO usuarioCadastroDTO) {
 		validarCadastro(usuarioCadastroDTO);
-		return usuarioRepository.save(usuarioConverter.paraUsuario(usuarioCadastroDTO));
+		Usuario usuario = usuarioConverter.paraUsuario(usuarioCadastroDTO);
+		validarPassword(usuarioCadastroDTO.getPassword(), usuarioCadastroDTO.getValidarPassword());
+		usuario.setPassword(criptografarSenha(usuarioCadastroDTO.getPassword()));
+		
+		return usuarioRepository.save(usuario);
+	}
+
+	private void validarPassword(String password, String validarPassword) {
+		if(!password.equals(validarPassword)) {
+			throw new NegocioException("Por favor, informe senhas iguais!");
+		}
 	}
 
 	@Override
@@ -80,6 +91,11 @@ public class UsuarioService implements UsuarioServiceImpl {
 			throw new NegocioException(String.format(NOME_USUARIO_JA_CADASTRADO, usuarioCadastroDTO.getNome()));
 		}
 	}
+	
+	private String criptografarSenha(String senha) {
+		return new BCryptPasswordEncoder().encode(senha);
+	}
+
 
 	@Override
 	public List<Usuario> buscar() {
