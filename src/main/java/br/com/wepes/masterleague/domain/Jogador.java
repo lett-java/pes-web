@@ -1,6 +1,7 @@
 package br.com.wepes.masterleague.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,10 +26,13 @@ public class Jogador implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
-	private Integer id;
+	private Long id;
 	private String nome;
+	private Integer idade;
 	private Integer contrato;
 	private Integer overall;
+	private BigDecimal valorDeMercado = BigDecimal.ZERO;
+	private BigDecimal salario = BigDecimal.ZERO;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "posicao")

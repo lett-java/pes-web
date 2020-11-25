@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum PosicaoEnum {
 	GOLEIRO("Goleiro"),
+	ZAGUEIRO("Zagueiro"),
 	LATERAL_DIREITO("Lateral Direito"),
 	LATERAL_ESQUERDO("Lateral Esquerdo"),
 	VOLANTE("Volante"),
