@@ -37,11 +37,13 @@ public class ClubeService implements ClubeServiceImpl {
 		return clubeRepository.save(clubeConverter.paraClube(clubeCadastroDTO));
 	}
 
+	@Override
 	public Clube buscarPorId(Long idClube) {
 		return clubeRepository.findById(idClube).orElseThrow(
 				() -> new EntidadeNaoEncontradaException(String.format(ID_CLUBE_NAO_ENCONTRADA, idClube)));
 	}
 
+	@Override
 	public void remover(Long idClube) {
 		try {
 			clubeRepository.deleteById(idClube);
@@ -50,6 +52,7 @@ public class ClubeService implements ClubeServiceImpl {
 		} 
 	}
 
+	@Override
 	public Clube atualizar(@Valid ClubeAtualizarDTO clubeAtualizarDTO, Long idClube) {
 		Clube clubeAtualizar = buscarPorId(idClube);
 
@@ -74,7 +77,13 @@ public class ClubeService implements ClubeServiceImpl {
 		}
 	}
 
+	@Override
 	public List<Clube> buscar() {
 		return clubeRepository.findAll();
+	}
+
+	public Clube findByNomeIgnoreCase(String nomeClube) {
+		return clubeRepository.findByNomeIgnoreCase(nomeClube).orElseThrow(
+				() -> new EntidadeNaoEncontradaException(String.format("Clube %s, não encontrado!", nomeClube)));
 	}
 }
