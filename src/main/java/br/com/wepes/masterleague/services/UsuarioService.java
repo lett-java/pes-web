@@ -39,11 +39,13 @@ public class UsuarioService implements UsuarioServiceImpl {
 		return usuarioRepository.save(usuarioConverter.paraUsuario(usuarioCadastroDTO));
 	}
 
+	@Override
 	public Usuario buscarPorId(Long idUsuario) {
 		return usuarioRepository.findById(idUsuario).orElseThrow(
 				() -> new EntidadeNaoEncontradaException(String.format(ID_USUARIO_NAO_ENCONTRADA, idUsuario)));
 	}
 
+	@Override
 	public void remover(Long idUsuario) {
 		try {
 			usuarioRepository.deleteById(idUsuario);
@@ -54,7 +56,7 @@ public class UsuarioService implements UsuarioServiceImpl {
 					String.format("Usuário de id %d, não pode ser deletado pois está em uso", idUsuario));
 		}
 	}
-
+	@Override
 	public Usuario atualizar(@Valid UsuarioAtualizarDTO usuarioAtualizarDTO, Long idUsuario) {
 		Usuario usuarioAtualizar = buscarPorId(idUsuario);
 
@@ -79,6 +81,7 @@ public class UsuarioService implements UsuarioServiceImpl {
 		}
 	}
 
+	@Override
 	public List<Usuario> buscar() {
 		return usuarioRepository.findAll();
 	}
