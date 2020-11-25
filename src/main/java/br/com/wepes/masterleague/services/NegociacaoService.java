@@ -43,29 +43,37 @@ public class NegociacaoService implements NegociacaoServiceImpl {
 	public NegociacaoViewDTO salvar(NegociacaoCadastroDTO negociacaoCadastroDTO) {
 		Clube clubeOrigem = clubeService.buscarPorId(negociacaoCadastroDTO.getIdClubeOrigem());
 		Clube clubeDestino = clubeService.buscarPorId(negociacaoCadastroDTO.getIdClubeDestino());
-
 		Jogador jogador = jogadorService.buscarPorId(negociacaoCadastroDTO.getIdJogador());
+		BigDecimal valorDaTransacao = BigDecimal.ZERO;
+
+		if (negociacaoCadastroDTO.getTipo().equals(TipoTransferenciaEnum.TRANSFERENCIA)) {
+			valorDaTransacao.add(jogador.getValorDeMercado());
+		} else {
+			valorDaTransacao.add(
+					BigDecimal.valueOf(jogador.getValorDeMercado().intValue() * 0.2).setScale(0, RoundingMode.HALF_UP));
+		}
+
 		validarValorEmCaixa(clubeDestino, jogador);
-		atualizarCaixaDosClubes(clubeOrigem, clubeDestino, jogador);
-		validarTipoDeNegociacao(negociacaoCadastroDTO, clubeDestino, jogador);
+		validarTipoDeNegociacao(negociacaoCadastroDTO, clubeDestino, clubeOrigem, jogador);
 		Negociacao negociacao = converterParaNegociacao(negociacaoCadastroDTO, clubeOrigem, clubeDestino, jogador);
 
 		return converterParaNegociacaoViewDTO(negociacaoRepository.save(negociacao));
 	}
 
 	private void validarTipoDeNegociacao(NegociacaoCadastroDTO negociacaoCadastroDTO, Clube clubeDestino,
-			Jogador jogador) {
+			Clube clubeOrigem, Jogador jogador) {
 		JogadorAtualizarDTO jogadorAtualizarDTO = new JogadorAtualizarDTO();
 		if (negociacaoCadastroDTO.getTipo().equals(TipoTransferenciaEnum.TRANSFERENCIA)) {
 			jogador.setContrato(3);
+			atualizarCaixaDosClubesTransferencia(clubeOrigem, clubeDestino, jogador);
 		} else {
 			jogador.setContrato(1);
+			atualizarCaixaDosClubesEmprestimo(clubeOrigem, clubeDestino, jogador);
 		}
 
 		jogadorAtualizarDTO = jogadorConverter.paraJogadorAtualizarDTO(jogador);
 		jogadorAtualizarDTO.setClube(clubeDestino);
-		jogadorAtualizarDTO
-		.setSalario(BigDecimal.valueOf(calcularSalario(jogador)).setScale(0, RoundingMode.HALF_UP));
+		jogadorAtualizarDTO.setSalario(BigDecimal.valueOf(calcularSalario(jogador)).setScale(0, RoundingMode.HALF_UP));
 		clubeDestino.getJogadores().add(jogadorService.atualizar(jogadorAtualizarDTO, jogador.getId()));
 	}
 
@@ -90,9 +98,18 @@ public class NegociacaoService implements NegociacaoServiceImpl {
 		return valorCalculadoSalario;
 	}
 
-	private void atualizarCaixaDosClubes(Clube clubeOrigem, Clube clubeDestino, Jogador jogador) {
+	private void atualizarCaixaDosClubesTransferencia(Clube clubeOrigem, Clube clubeDestino, Jogador jogador) {
 		clubeDestino.setCaixa(clubeDestino.getCaixa().subtract(jogador.getValorDeMercado()));
 		clubeOrigem.setCaixa(clubeOrigem.getCaixa().add(jogador.getValorDeMercado()));
+	}
+
+	private void atualizarCaixaDosClubesEmprestimo(Clube clubeOrigem, Clube clubeDestino, Jogador jogador) {
+		double valorPorEmprestimo = jogador.getValorDeMercado().intValue() * 0.2;
+
+		clubeDestino.setCaixa(clubeDestino.getCaixa()
+				.subtract(BigDecimal.valueOf(valorPorEmprestimo).setScale(0, RoundingMode.HALF_UP)));
+		clubeOrigem.setCaixa(
+				clubeOrigem.getCaixa().add(BigDecimal.valueOf(valorPorEmprestimo).setScale(0, RoundingMode.HALF_UP)));
 	}
 
 	private void validarValorEmCaixa(Clube clubeDestino, Jogador jogador) {
@@ -107,8 +124,15 @@ public class NegociacaoService implements NegociacaoServiceImpl {
 		negociacao.setClubeDestino(clubeDestino);
 		negociacao.setClubeOrigem(clubeOrigem);
 		negociacao.setTipo(negociacaoCadastroDTO.getTipo());
-		negociacao.setValorTransacionado(jogador.getValorDeMercado());
 		negociacao.setJogador(jogadorService.buscarPorId(negociacaoCadastroDTO.getIdJogador()));
+
+		if (negociacaoCadastroDTO.getTipo().equals(TipoTransferenciaEnum.TRANSFERENCIA)) {
+			negociacao.setValorTransacionado(jogador.getValorDeMercado());
+		} else {
+			negociacao.setValorTransacionado(
+					BigDecimal.valueOf(jogador.getValorDeMercado().intValue() * 0.2).setScale(0, RoundingMode.HALF_UP));
+		}
+
 		return negociacao;
 	}
 
