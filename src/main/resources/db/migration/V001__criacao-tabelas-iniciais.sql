@@ -4,7 +4,8 @@ CREATE TABLE clube (
 	derrota integer, 
 	empate integer, 
 	gol_pro integer, 
-	gol_sofrido integer, 
+	gol_sofrido integer,
+	torcedor integer, 
 	nome varchar(255), 
 	vitoria integer, 
 	id_usuario bigint, 
@@ -30,9 +31,9 @@ CREATE TABLE negociacao (
 	id bigint NOT NULL AUTO_INCREMENT, 
 	tipo varchar(255), 
 	valor_transacionado decimal(19,2), 
-	id_clube_destino bigint, 
-	id_clube_origem bigint, 
-	id_jogador bigint NOT NULL, 
+	id_clube_destino bigint NOT NULL, 
+	id_clube_origem bigint NOT NULL, 
+	id_jogador bigint, 
 	
 	primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

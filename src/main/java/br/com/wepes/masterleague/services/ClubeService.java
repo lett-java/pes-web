@@ -34,7 +34,10 @@ public class ClubeService implements ClubeServiceImpl {
 	@Override
 	public Clube salvar(ClubeCadastroDTO clubeCadastroDTO) {
 		validarCadastro(clubeCadastroDTO);
-		return clubeRepository.save(clubeConverter.paraClube(clubeCadastroDTO));
+		Clube clube = clubeConverter.paraClube(clubeCadastroDTO);
+		clube.setTorcedor(10000);
+		
+		return clubeRepository.save(clube);
 	}
 
 	@Override

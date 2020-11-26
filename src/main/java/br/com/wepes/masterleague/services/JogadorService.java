@@ -43,7 +43,9 @@ public class JogadorService implements JogadorServiceImpl {
 		double valorCalculado = 0;
 
 		valorCalculado = valorPorPosicao(valorCalculado, jogador);
-		valorCalculado = valorCalculadoPorIdade(valorCalculado, jogador) * 1000000;
+		valorCalculado = valorCalculadoPorIdade(valorCalculado, jogador);
+		valorCalculado = valorCalculadoPorOverall(valorCalculado, jogador.getOverall(), jogador.getIdade(),
+				jogador.getPosicao()) * 1000000;
 
 		jogador.setValorDeMercado(BigDecimal.valueOf(valorCalculado).setScale(0, RoundingMode.HALF_UP));
 
@@ -72,11 +74,13 @@ public class JogadorService implements JogadorServiceImpl {
 		validarAtualizacao(jogadorAtualizarDTO, jogadorAtualizar);
 		jogadorAtualizar = jogadorConverter.paraJogador(jogadorAtualizarDTO);
 		jogadorAtualizar.setId(idJogador);
-		
+
 		double valorCalculado = 0;
 
 		valorCalculado = valorPorPosicao(valorCalculado, jogadorAtualizar);
-		valorCalculado = valorCalculadoPorIdade(valorCalculado, jogadorAtualizar) * 1000000;
+		valorCalculado = valorCalculadoPorIdade(valorCalculado, jogadorAtualizar);
+		valorCalculado = valorCalculadoPorOverall(valorCalculado, jogadorAtualizar.getOverall(),
+				jogadorAtualizar.getIdade(), jogadorAtualizar.getPosicao()) * 1000000;
 
 		jogadorAtualizar.setValorDeMercado(BigDecimal.valueOf(valorCalculado).setScale(0, RoundingMode.HALF_UP));
 
@@ -107,7 +111,6 @@ public class JogadorService implements JogadorServiceImpl {
 			valorCalculado += (j.getOverall() * 0.38);
 		} else if (j.getIdade() <= 20) {
 			valorCalculado += (j.getOverall() * 0.54);
-			valorCalculado = valorCalculado / 3;
 		} else if (j.getIdade() <= 25) {
 			valorCalculado += (j.getOverall() * 1.20);
 		} else if (j.getIdade() <= 29) {
@@ -140,5 +143,35 @@ public class JogadorService implements JogadorServiceImpl {
 			valorCalculado = (j.getOverall() * 0.15);
 		}
 		return valorCalculado;
+	}
+
+	private int valorCalculadoPorOverall(Double valorCalculado, Integer overall, Integer idade, PosicaoEnum posicao) {
+		if (overall < 81 && idade < 26) {
+			valorCalculado = valorCalculado / 4;
+		} else if (overall < 86 && idade < 25) {
+			valorCalculado = valorCalculado / 1.85;
+		} else if (overall < 88 && idade < 25) {
+			valorCalculado = valorCalculado / 1.5;
+		} else if (overall < 86 && idade < 28) {
+			valorCalculado = valorCalculado / 2;
+		} else if (overall < 80 && idade < 50) {
+			valorCalculado = valorCalculado / 1.93;
+		}
+
+		if (overall >= 85 && idade < 37 && (posicao.equals(PosicaoEnum.GOLEIRO) || posicao.equals(PosicaoEnum.ZAGUEIRO)
+				|| posicao.equals(PosicaoEnum.LATERAL_DIREITO) || posicao.equals(PosicaoEnum.LATERAL_ESQUERDO))) {
+			valorCalculado = valorCalculado * 1.42;
+		}
+
+		if ((overall <= 89 || overall >= 80)
+				&& (posicao.equals(PosicaoEnum.MEIO_CAMPO) || posicao.equals(PosicaoEnum.VOLANTE))) {
+			valorCalculado = valorCalculado / 1.27;
+		}
+		
+		if (overall >= 90) {
+			valorCalculado = valorCalculado * 1.12;
+		}
+
+		return valorCalculado.intValue();
 	}
 }
