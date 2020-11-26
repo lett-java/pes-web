@@ -15,8 +15,4 @@ public class UsuarioCadastroDTO {
 	@NotBlank
 	@ApiParam(required = true)
 	private String password;
-	
-	@NotBlank
-	@ApiParam(required = true)
-	private String validarPassword;
 }
